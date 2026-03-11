@@ -5,6 +5,7 @@ import 'package:travell_app/screens/home_page.dart';
 import 'package:travell_app/screens/login_screen.dart';
 import 'package:travell_app/screens/register_screen.dart';
 import 'package:travell_app/screens/slider_screen.dart';
+import 'package:travell_app/screens/verification_register.dart';
 import 'package:travell_app/theme/app_colors.dart';
 
 void main() {
@@ -71,6 +72,15 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/home': (context) => HomePage(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/verification') {
+          final email = settings.arguments as String; // Recibimos el string
+          return MaterialPageRoute(
+            builder: (context) => VerificationRegister(email: email),
+          );
+        }
+        return null;
       },
     );
   }

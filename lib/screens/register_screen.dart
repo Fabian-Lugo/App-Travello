@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:travell_app/models/user_model.dart';
 import 'package:travell_app/theme/app_colors.dart';
 import 'package:travell_app/utils/input_style.dart';
 import 'package:travell_app/widgets/button_style_default.dart';
@@ -15,12 +14,26 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _controllerTextName = TextEditingController();
   final TextEditingController _controllerTextEmail = TextEditingController();
-  final TextEditingController _controllerIntPhoneNumber = TextEditingController();
+  final TextEditingController _controllerIntPhone = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final _key = GlobalKey<FormState>();
   String? messageOnScreen;
   bool _obscureText = true;
   bool _checkBox = false;
+
+  final FocusNode _focusName = FocusNode();
+  final FocusNode _focusEmail = FocusNode();
+  final FocusNode _focusPhone = FocusNode();
+  final FocusNode _focusPassword = FocusNode();
+
+  @override
+  void dispose() {
+    _focusName.dispose();
+    _focusEmail.dispose();
+    _focusPhone.dispose();
+    _focusPassword.dispose();
+    super.dispose();
+  }
 
   void _seePassword() {
     setState(() {
@@ -29,19 +42,34 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   
-  void loginValidate() {
+  void registerValidate() {
     setState(() {
       if (_key.currentState!.validate()) {
         messageOnScreen = null;
-        if (_controllerIntPhoneNumber.text.length < 9) {
+        if (_controllerIntPhone.text.length < 9) {
           messageOnScreen = 'Numero incompleto';
-        } else if (_controllerIntPhoneNumber.text.length > 9){
+        } else if (_controllerIntPhone.text.length > 9){
           messageOnScreen = 'Error numero mayor a 9 caracteres';
         } else if (_checkBox != true){
           messageOnScreen = 'Marca la casilla';
         } else {
           setState(() {
-            Navigator.pushNamed(context, '/home');
+            _focusName.unfocus();
+            _focusEmail.unfocus();
+            _focusPhone.unfocus();
+            _focusPassword.unfocus();
+            Navigator.pushNamed(context, '/verification',
+            arguments: _controllerTextEmail.text
+            ).then((_) {
+              if (mounted) {
+                FocusScope.of(context).unfocus();
+              }
+            });
+            _controllerTextName.clear();
+            _controllerIntPhone.clear();
+            _controllerPassword.clear();
+            _checkBox = false;
+            _controllerTextEmail.clear();
           });
         }
       } else {
@@ -104,6 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           TextFormField(
                             controller: _controllerTextName,
                             keyboardType: TextInputType.text,
+                            focusNode: _focusName,
                             onChanged: (value) {
                               if (messageOnScreen != null) {
                                 setState(() {
@@ -131,6 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           TextFormField(
                             controller: _controllerTextEmail,
                             keyboardType: TextInputType.emailAddress,
+                            focusNode: _focusEmail,
                             onChanged: (value) {
                               if (messageOnScreen != null) {
                                 setState(() {
@@ -156,8 +186,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 30),
                           TextFormField(
-                            controller: _controllerIntPhoneNumber,
+                            controller: _controllerIntPhone,
                             keyboardType: TextInputType.number,
+                            focusNode: _focusPhone,
                             onChanged: (value) {
                               if (messageOnScreen != null) {
                                 setState(() {
@@ -185,6 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           TextFormField(
                             controller: _controllerPassword,
                             keyboardType: TextInputType.text,
+                            focusNode: _focusPassword,
                             onChanged: (value) => setState(() {
                               messageOnScreen = null;
                             }),
@@ -267,7 +299,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ],
                     ),
                     const SizedBox(height: 40),
-                    ButtonStyleDefalt(text: 'Crear cuenta', onTap: loginValidate),
+                    ButtonStyleDefalt(text: 'Crear cuenta', onTap: registerValidate),
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
