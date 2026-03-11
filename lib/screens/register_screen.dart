@@ -5,27 +5,22 @@ import 'package:travell_app/theme/app_colors.dart';
 import 'package:travell_app/utils/input_style.dart';
 import 'package:travell_app/widgets/button_style_default.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _controllerText = TextEditingController();
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _controllerTextName = TextEditingController();
+  final TextEditingController _controllerTextEmail = TextEditingController();
+  final TextEditingController _controllerIntPhoneNumber = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final _key = GlobalKey<FormState>();
   String? messageOnScreen;
   bool _obscureText = true;
-  bool _rememberMe = false;
-
-  final List<UserModel> users = [
-    UserModel(user: 'user1', password: 'test123'),
-    UserModel(user: 'user2', password: 'test123'),
-    UserModel(user: 'User3', password: 'test123'),
-  ];
-  
+  bool _checkBox = false;
 
   void _seePassword() {
     setState(() {
@@ -35,20 +30,24 @@ class _LoginPageState extends State<LoginPage> {
 
   
   void loginValidate() {
-    if (_key.currentState!.validate()) {
-        bool? isValidUser = users.any((u) =>
-          u.user == _controllerText.text.trim() &&
-          u.password == _controllerPassword.text.trim());
-
-        setState(() {
-          if (isValidUser) {
-            messageOnScreen = null;
+    setState(() {
+      if (_key.currentState!.validate()) {
+        messageOnScreen = null;
+        if (_controllerIntPhoneNumber.text.length < 9) {
+          messageOnScreen = 'Numero incompleto';
+        } else if (_controllerIntPhoneNumber.text.length > 9){
+          messageOnScreen = 'Error numero mayor a 9 caracteres';
+        } else if (_checkBox != true){
+          messageOnScreen = 'Marca la casilla';
+        } else {
+          setState(() {
             Navigator.pushNamed(context, '/home');
-          } else {
-            messageOnScreen = 'Credenciales incorrecta';
-          }
-        });
-    }
+          });
+        }
+      } else {
+        messageOnScreen = 'Campos incompletos';
+      }
+    });
   }
 
   @override
@@ -80,11 +79,11 @@ class _LoginPageState extends State<LoginPage> {
                     child: Center(
                       child: Column(
                         children: [
-                          Text('Bienvenido',
+                          Text('Empezemos',
                             style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 40),
                           ),
                           const SizedBox(height: 15),
-                          Text('Inicie sesión para acceder a su cuenta',
+                          Text('Crea una cuenta gratuita',
                             style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 15),
                           ),
                         ],
@@ -93,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 35),
                 child: Column(
@@ -103,7 +102,34 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         children: [
                           TextFormField(
-                            controller: _controllerText,
+                            controller: _controllerTextName,
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) {
+                              if (messageOnScreen != null) {
+                                setState(() {
+                                  messageOnScreen = null;
+                                });
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Nombre',
+                              labelStyle: TextStyle(color: AppColors.black50),
+                              filled: true,
+                              fillColor: AppColors.gray,
+                              enabledBorder: InputStyles.customBorder(),
+                              focusedBorder: InputStyles.customBorder(),
+                              errorBorder: InputStyles.customBorder(),
+                              focusedErrorBorder: InputStyles.customBorder(),
+                              suffixIcon: Icon(Icons.person_2_outlined, color: AppColors.black50,)
+                            ),
+                            validator: (value) => 
+                            (value?.trim().isEmpty ?? true)
+                            ? 'Completa el campo'
+                            : null,
+                          ),
+                          const SizedBox(height: 30),
+                          TextFormField(
+                            controller: _controllerTextEmail,
                             keyboardType: TextInputType.emailAddress,
                             onChanged: (value) {
                               if (messageOnScreen != null) {
@@ -113,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             },
                             decoration: InputDecoration(
-                              labelText: 'Ingresa tu correo',
+                              labelText: 'Correo',
                               labelStyle: TextStyle(color: AppColors.black50),
                               filled: true,
                               fillColor: AppColors.gray,
@@ -125,7 +151,34 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             validator: (value) => 
                             (value?.trim().isEmpty ?? true)
-                            ? 'Ingresa tu correo'
+                            ? 'Completa el campo'
+                            : null,
+                          ),
+                          const SizedBox(height: 30),
+                          TextFormField(
+                            controller: _controllerIntPhoneNumber,
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) {
+                              if (messageOnScreen != null) {
+                                setState(() {
+                                  messageOnScreen = null;
+                                });
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Numero',
+                              labelStyle: TextStyle(color: AppColors.black50),
+                              filled: true,
+                              fillColor: AppColors.gray,
+                              enabledBorder: InputStyles.customBorder(),
+                              focusedBorder: InputStyles.customBorder(),
+                              errorBorder: InputStyles.customBorder(),
+                              focusedErrorBorder: InputStyles.customBorder(),
+                              suffixIcon: Icon(Icons.phone, color: AppColors.black50,)
+                            ),
+                            validator: (value) => 
+                            (value?.trim().isEmpty ?? true)
+                            ? 'Completa el campo'
                             : null,
                           ),
                           const SizedBox(height: 30),
@@ -154,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             validator: (value) => 
                             (value?.trim().isEmpty ?? true)
-                            ? 'Ingresa tu contraseña'
+                            ? 'Completa el campo'
                             : null,
                           ),
                         ],
@@ -165,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(messageOnScreen!,
                         style: GoogleFonts.poppins(color: AppColors.primary, fontSize: 15, fontWeight: FontWeight.w600),
                       ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -175,46 +228,59 @@ class _LoginPageState extends State<LoginPage> {
                               height: 24,
                               width: 24,
                               child: Checkbox(
-                                value: _rememberMe, 
+                                value: _checkBox, 
                                 activeColor: AppColors.primary,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                 side: const BorderSide(color: AppColors.black50, width: 2),
                                 onChanged: (bool? newValue) =>
                                 setState(() {
-                                  _rememberMe = newValue!;
+                                  _checkBox = newValue!;
                                 })
                               ),
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Recordarme',
+                              'Acepto los',
                               style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.tertiary),
+                            ),
+                            const SizedBox(width: 3),
+                            GestureDetector(
+                              onTap: () => debugPrint('Usuario: Terminos'),
+                              child: Text('Terminos',
+                                style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.primary),
+                              ),
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              'y',
+                              style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.tertiary),
+                            ),
+                            const SizedBox(width: 3),
+                            GestureDetector(
+                              onTap: () => debugPrint('Usuario: Condiciones'),
+                              child: Text('Condiciones',
+                                style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.primary),
+                              ),
                             ),
                           ],
                         ),
-                        GestureDetector(
-                          onTap: () => debugPrint('Usuario: Cambiar Contraseña'),
-                          child: Text('Cambiar contraseña',
-                            style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.primary),
-                          ),
-                        )
                       ],
                     ),
-                    const SizedBox(height: 115),
-                    ButtonStyleDefalt(text: 'Iniciar sesión', onTap: loginValidate),
+                    const SizedBox(height: 40),
+                    ButtonStyleDefalt(text: 'Crear cuenta', onTap: loginValidate),
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            Text('Nuevo miembro?',
+                            Text('Ya eres miembro?',
                               style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.tertiary)
                             ),
                             const SizedBox(width: 5),
                             GestureDetector(
-                              onTap: () => Navigator.pushNamed(context, '/register'),
-                              child: Text('Registrate ahora',
+                              onTap: () => Navigator.pushNamed(context, '/login'),
+                              child: Text('Inicia sesión',
                                 style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.primary)
                               ),
                             ),
