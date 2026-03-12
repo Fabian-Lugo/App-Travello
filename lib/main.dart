@@ -4,6 +4,7 @@ import 'package:travell_app/screens/custom_splash_screen.dart';
 import 'package:travell_app/screens/home_screen.dart';
 import 'package:travell_app/screens/login_screen.dart';
 import 'package:travell_app/screens/register_screen.dart';
+import 'package:travell_app/screens/settings_screen.dart';
 import 'package:travell_app/screens/slider_screen.dart';
 import 'package:travell_app/screens/verification_register.dart';
 import 'package:travell_app/theme/app_colors.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         '/slide': (context) => SliderScreen(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
+        '/settings': (context) => SettingsScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/home') {

@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             decoration: InputDecoration(
                               labelText: 'Ingresa tu correo',
-                              labelStyle: TextStyle(color: AppColors.black50),
+                              labelStyle: GoogleFonts.poppins(color: AppColors.black50),
                               filled: true,
                               fillColor: AppColors.gray,
                               enabledBorder: InputStyles.customBorder(),
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                             obscureText: _obscureText,
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
-                              labelStyle: TextStyle(color: AppColors.black50),
+                              labelStyle: GoogleFonts.poppins(color: AppColors.black50),
                               filled: true,
                               fillColor: AppColors.gray,
                               enabledBorder: InputStyles.customBorder(),

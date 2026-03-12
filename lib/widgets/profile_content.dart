@@ -28,10 +28,11 @@ class _ProfileContentState extends State<ProfileContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.quaternary,
         actions: [ 
           IconButton(
-            onPressed: () => debugPrint('Usuario: Configuracion'),
+            onPressed: () => Navigator.pushNamed(context, '/settings'),
             icon: Icon(CupertinoIcons.settings_solid, color: AppColors.black50),
           ),
         ],

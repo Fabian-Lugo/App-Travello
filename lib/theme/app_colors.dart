@@ -19,10 +19,4 @@ abstract final class AppColors {
 
   /// Negro al 50% de opacidad
   static const Color black50 = Color(0x80000000);
-
-  /// Acento turquesa - #14B8A6 (mar, cielo, sensación de viaje)
-  static const Color accent = Color(0xFF14B8A6);
-
-  /// Destacado ámbar - #F59E0B (sol, ofertas, elementos premium)
-  static const Color highlight = Color(0xFFF59E0B);
 }

@@ -143,7 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                             decoration: InputDecoration(
                               labelText: 'Nombre',
-                              labelStyle: TextStyle(color: AppColors.black50),
+                              labelStyle: GoogleFonts.poppins(color: AppColors.black50),
                               filled: true,
                               fillColor: AppColors.gray,
                               enabledBorder: InputStyles.customBorder(),
@@ -184,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                             decoration: InputDecoration(
                               labelText: 'Correo',
-                              labelStyle: TextStyle(color: AppColors.black50),
+                              labelStyle: GoogleFonts.poppins(color: AppColors.black50),
                               filled: true,
                               fillColor: AppColors.gray,
                               enabledBorder: InputStyles.customBorder(),
@@ -225,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                             decoration: InputDecoration(
                               labelText: 'Numero',
-                              labelStyle: TextStyle(color: AppColors.black50),
+                              labelStyle: GoogleFonts.poppins(color: AppColors.black50),
                               filled: true,
                               fillColor: AppColors.gray,
                               enabledBorder: InputStyles.customBorder(),
@@ -263,7 +263,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             obscureText: _obscureText,
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
-                              labelStyle: TextStyle(color: AppColors.black50),
+                              labelStyle: GoogleFonts.poppins(color: AppColors.black50),
                               filled: true,
                               fillColor: AppColors.gray,
                               enabledBorder: InputStyles.customBorder(),
