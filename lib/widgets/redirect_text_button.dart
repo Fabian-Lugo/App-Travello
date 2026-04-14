@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
+import 'package:travell_app/router/app_routes.dart';
 import 'package:travell_app/theme/app_colors.dart';
 
 class RedirectTextButton extends StatelessWidget {
@@ -24,7 +26,7 @@ class RedirectTextButton extends StatelessWidget {
         ),
         const SizedBox(width: 5),
         GestureDetector(
-          onTap: () => isReturn ? Navigator.pop(context) : Navigator.pushNamed(context, '/register'),
+          onTap: () => isReturn ? context.pop() : context.push(AppRoutes.register),
           behavior: HitTestBehavior.opaque,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

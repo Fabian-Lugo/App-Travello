@@ -1,92 +1,113 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:travell_app/services/database_service.dart';
-import 'package:travell_app/theme/app_assets.dart';
 import 'package:travell_app/theme/app_colors.dart';
-import 'package:travell_app/widgets/home_content.dart';
-import 'package:travell_app/widgets/profile_content.dart';
 
-class HomeScreen extends StatefulWidget {
-  final String? email;
-  final String? password;
+class HomeScreen extends StatelessWidget {
+  final String? name;
 
   const HomeScreen({
     super.key,
-    this.email,
-    this.password,
+    this.name,
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: _HomeContent(name: name),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-  final DatabaseService _db = DatabaseService();
+/// Contenedor que agrupa los elementos estáticos principales de la pantalla Home
+class _HomeContent extends StatelessWidget {
+  final String? name;
+
+  const _HomeContent({this.name});
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final email = widget.email ?? user?.email ?? '';
+    return Column(
+      children: [
+        _WelcomeHeader(name: name),
+        const SizedBox(height: 80),
+        Image.asset('assets/welcome_image.png'),
+        const SizedBox(height: 20),
+        const _HomeStatusUpdate(),
+      ],
+    );
+  }
+}
 
-    return Scaffold(
-      body: user == null
-          ? const Center(child: Text('No hay sesión activa'))
-          : FutureBuilder(
-              future: _db.getUserDataOnce(user.uid),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final name = snapshot.data?.name ?? '';
-                return _currentIndex == 0
-                    ? HomeContent(name: name.isNotEmpty ? name : null)
-                    : ProfileContent(
-                        name: name.isNotEmpty ? name : 'Usuario',
-                        email: email,
-                        password: widget.password ?? '',
-                      );
-              },
-            ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.quaternary,
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              backgroundColor: AppColors.quaternary,
-              elevation: 0,
-              selectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
-              type: BottomNavigationBarType.fixed,
-              showUnselectedLabels: true,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Image.asset(AppAssets.home, width: 25, color: AppColors.black50),
-                  activeIcon: Image.asset(AppAssets.home, width: 25, color: AppColors.primary),
-                  label: 'Inicio',
+/// Muestra un encabezado de bienvenida que se adapta si el nombre es muy largo
+class _WelcomeHeader extends StatelessWidget {
+  final String? name;
+
+  const _WelcomeHeader({this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    // Si el nombre es largo, se divide en dos lineas para evitar desbordamientos
+    return (name != null && name!.length > 6)
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Bienvenido',
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600, fontSize: 35),
                 ),
-                BottomNavigationBarItem(
-                  icon: Image.asset(AppAssets.profile, width: 25, color: AppColors.black50),
-                  activeIcon: Image.asset(AppAssets.profile, width: 25, color: AppColors.primary),
-                  label: 'Perfil',
+              ),
+              Text(
+                name!,
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 35,
+                    color: AppColors.primary),
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              Text(
+                'Bienvenido ',
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600, fontSize: 35),
+              ),
+              if (name != null)
+                Text(
+                  name!,
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 35,
+                      color: AppColors.primary),
                 ),
-              ],
-            ),
-          ),
-        )
+            ],
+          );
+  }
+}
+
+/// Widget informativo de estado, indicando que hay zonas de la app en desarrollo
+class _HomeStatusUpdate extends StatelessWidget {
+  const _HomeStatusUpdate();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'Actualmente, la siguiente parte de "Actividad y Fragmentación del Hogar"\n está en desarrollo. La segunda parte estará disponible próximamente.',
+        style: GoogleFonts.poppins(fontSize: 18),
       ),
     );
   }
